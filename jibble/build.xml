@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Jibble" default="run" basedir=".">
+  	<property name="src.dir" value="src" />
+	<property name="webfiles.dir" value="webfiles"/>
+	<property name="bin.dir" value="bin" />	
+	
+	<path id="master-classpath">
+		<fileset dir=".">
+			<include name="*.jar"/>
+		</fileset>
+		<pathelement path="bin"/>
+	</path>
+	
+	<target name = "help">
+		<echo message = "Below are available arguments for ant file"/> 
+		<echo message = "clean    >> Clean the project"/>
+		<echo message = "build    >> Compile the project"/>
+		<echo message = "jar      >> Create jar file"/>
+		<echo message = "run      >> Run jar file"/>
+		<echo message = "deploy   >> Copy source code to temp folder"/>
+	</target>
+	
+	<target name="clean" description="Clean output directories">
+		<mkdir dir = "bin"/>
+		
+			<delete>
+				<fileset dir="bin">
+					<include name="**/*.class"/>
+				</fileset>
+			</delete>	
+	 	</target>
+	
+	<target name="build" depends = "clean" description="Compile source tree java files">
+
+		<javac srcdir="src/" 
+			destdir="bin" source="1.7" target="1.7"
+			includeantruntime = "false" >
+									
+		</javac>
+	</target>
+		
+	<target name= "jar" depends = "build">
+		
+		<jar destfile = "jibble.jar"
+			 basedir = "bin">
+		
+			<manifest>
+				<attribute name = "Main-Class" value = "WebServerMain" />
+			</manifest>
+		</jar>
+	</target>
+		
+	<target name = "run" depends = "jar">	
+		<java jar = "jibble.jar" fork = "true" />
+	</target>
+
+	<target name = "deploy" depends = "build" description = "Deploy application">
+	    <copy todir = "temp" preservelastmodified = "true">
+
+	       <fileset dir = "src/">
+	          <include name = "**/*.*"/>
+	       </fileset>
+
+	    </copy>
+	</target>
+</project>
